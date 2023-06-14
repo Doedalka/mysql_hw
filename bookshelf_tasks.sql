@@ -51,12 +51,11 @@ WHERE shelves.title LIKE '%нижняя%' OR shelves.title LIKE '%верхняя
 ;
 -- 8. 
 UPDATE books
-SET books.friends_id = 1
-WHERE id = (SELECT id FROM (SELECT books.id from books
-JOIN authors_books ON books.id = authors_books.books_id
+JOIN authors_books ON authors_books.books_id = books.id
 JOIN authors ON authors_books.authors_id = authors.id
-WHERE books.title = 'Божественная комедия' AND authors.name = 'Данте Алигьери'
-)as x);
+SET books.friends_id = (SELECT friends.id FROM friends WHERE friends.name = 'Иванов Иван')
+WHERE authors.name = 'Данте Алигьери' AND books.title = 'Божественная комедия'
+AND books.id > 0;
 -- 9. Добавить в базу книгу «Краткие ответы на большие вопросы», год издания 2020, автор «Стивен Хокинг», положить ее на полку в кабинете
 INSERT INTO books (books.title, books.year, books.shelves_id)
 VALUES ('Краткие ответы на большие вопросы', '2020', (SELECT id FROM shelves WHERE title = 'Полка в кабинете'))
